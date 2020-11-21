@@ -3,14 +3,17 @@ import './App.css';
 
 import SearchBox from './components/search-box/search-box';
 import CardList from './components/card-list/card-list';
+import Loader from './components/loader/loader';
 
 function App() {
   const [users, setUsers] = useState([]);
 
   useEffect(() => {
-    fetch('https://jsonplaceholder.typicode.com/users')
-      .then((res) => res.json())
-      .then((data) => setUsers(data));
+    setTimeout(() => {
+      fetch('https://jsonplaceholder.typicode.com/users')
+        .then((res) => res.json())
+        .then((data) => setUsers(data));
+    }, 2000);
   }, []);
 
   const [searchField, setSearchField] = useState('');
@@ -25,7 +28,7 @@ function App() {
     <>
       <h1 className='title'>Robofriends</h1>
       <SearchBox handleInput={handleInput} />
-      <CardList users={filteredUsers} />
+      {filteredUsers.length ? <CardList users={filteredUsers} /> : <Loader />}
     </>
   );
 }
