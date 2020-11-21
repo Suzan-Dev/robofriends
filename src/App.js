@@ -1,24 +1,32 @@
-import logo from './logo.svg';
+import React, { useState, useEffect } from 'react';
 import './App.css';
 
+import SearchBox from './components/search-box/search-box';
+import CardList from './components/card-list/card-list';
+
 function App() {
+  const [users, setUsers] = useState([]);
+
+  useEffect(() => {
+    fetch('https://jsonplaceholder.typicode.com/users')
+      .then((res) => res.json())
+      .then((data) => setUsers(data));
+  }, []);
+
+  const [searchField, setSearchField] = useState('');
+
+  const handleInput = (e) => {
+    setSearchField(e.target.value);
+  };
+
+  const filteredUsers = users.filter(({ name }) => name.toLowerCase().includes(`${searchField.toLowerCase()}`));
+
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
+    <>
+      <h1 className='title'>Robofriends</h1>
+      <SearchBox handleInput={handleInput} />
+      <CardList users={filteredUsers} />
+    </>
   );
 }
 
